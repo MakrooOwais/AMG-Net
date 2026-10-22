@@ -1,0 +1,29 @@
+_base_: ../base.yaml
+# Late fusion of imaging and clinical covariates.
+#
+# This is the single most plausible route to a difference large enough to detect.
+# On the 4-class target every architecture tried landed within 0.33-0.41 patient
+# macro-F1, which says the limit is information rather than capacity. Covariates
+# are a genuinely different information channel, not a better model of the same
+# pixels.
+#
+# The image branch is identical to the swin baseline and the clinical branch is a
+# small MLP, concatenated into one head. Late rather than early or attention
+# fusion because with ~180 patients in the largest class the fusion layer has to
+# stay tiny, and because keeping the image branch unchanged is what lets the
+# comparison against swin isolate the added covariates.
+#
+# clinical_dropout is modality dropout, not ordinary dropout: it zeroes the whole
+# clinical vector for a random subset of the batch, so the image branch cannot be
+# bypassed. That matters because chart review will be incomplete for some
+# patients, and because otherwise the head can learn to ignore imaging entirely.
+#
+# The comparison that matters is this row against BOTH swin (image only) and
+# clinical_only. Beating only the image model would not establish that fusion
+# helps - the covariates alone might already do it.
+#
+# REQUIRES data.clinical_csv.
+experiment: fusion
+model:
+  name: fusion
+  backbone: swin_tiny_patch4_window7_224

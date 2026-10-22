@@ -1,0 +1,18 @@
+_base_: ../base.yaml
+# Clinical covariates alone, no imaging. Multinomial logistic regression.
+#
+# This is the control that decides whether the imaging model is worth anything.
+# Reviewer #1 asked for exactly this comparison: if chart-review covariates alone
+# match the imaging model, then a CT-based classifier is not the contribution the
+# paper claims. It must be run and reported whatever it says.
+#
+# Logistic regression rather than gradient boosting: there are ~14-30 columns
+# after preprocessing and 287 patients, where a boosted ensemble mostly fits
+# noise. The radiomics rows already provide a tree-based comparator.
+#
+# REQUIRES data.clinical_csv. Produce the blank sheet with
+#   python -m ppgl.cli clinical-template --out results/clinical_template.csv
+# then fill it from chart review and pass it via --clinical-csv.
+experiment: clinical_only
+model:
+  name: clinical_only

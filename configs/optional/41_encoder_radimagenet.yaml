@@ -1,0 +1,23 @@
+_base_: ../base.yaml
+
+# Encoder-comparison axis: RadImageNet ResNet-50 (1.35M 2D CT/MR/US slices) - the
+# only large 2D *radiology* pretraining corpus, and directly compatible with our
+# pre-windowed 8-bit slices.
+#
+# REQUIRES A LOCAL CHECKPOINT THAT IS NOT BUNDLED. RadImageNet weights are
+# distributed as Keras/TF and must be converted to a torch state_dict first, then
+# pointed to below. Until then this config fails fast rather than silently
+# training from scratch.
+#
+# Note the bundled weights/resnet50.a1_in1k.safetensors is ImageNet, NOT
+# RadImageNet, and does not satisfy this config. For an encoder row that runs
+# today, use 42_encoder_resnet50.yaml; because it uses the same ResNet-50
+# architecture, the pair forms a clean ImageNet-vs-radiology comparison once these
+# weights are available.
+experiment: encoder_radimagenet
+model:
+  name: routed
+  backbone: resnet50
+  pretrained: false
+  backbone_weights: weights/radimagenet_resnet50.pth
+  routing: soft

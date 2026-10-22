@@ -1,0 +1,19 @@
+_base_: ../base.yaml
+
+# Fine-tuning ablation: LoRA on the attention projections, backbone frozen.
+#
+# At n=630 this is the regime where LoRA has been reported to match or beat full
+# fine-tuning, with the advantage growing as labelled data shrinks (Lian et al.,
+# "Less could be better", 2024). LoRA trains a flat LR since there is no
+# backbone depth to decay through.
+experiment: finetune_lora
+model:
+  name: routed
+  backbone: swin_tiny_patch4_window7_224
+  routing: soft
+  finetune: lora
+  lora_r: 8
+  lora_alpha: 16.0
+  lora_targets: [qkv, q_proj, v_proj]
+optim:
+  lr: 5.0e-4          # adapters tolerate and need a larger LR than a full fine-tune

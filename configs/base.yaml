@@ -1,0 +1,93 @@
+# Shared defaults for every experiment. Experiment configs inherit via _base_.
+#
+# The optimisation block is the corrected recipe. The rejected submission used a
+# fixed 1e-2 with AdamW for 200 epochs on a pretrained Swin, which is 100-1000x
+# typical and degrades the pretrained representation; ppgl.config rejects any
+# lr >= 1e-2 outright.
+
+data:
+  root: detection_data_NIH/original
+  manifest: results/manifest.csv
+
+  # Anatomical region labels are NOT present in this archive.
+  #   heuristic -> provisional automatic estimate, for pipeline validation only
+  #   csv       -> radiologist labels; REQUIRED for any reported number
+  location_source: heuristic
+  location_csv: null
+  location_cache: results/location_labels_heuristic.csv
+
+  image_size: 224
+  crop_mode: roi_context      # lesion box expanded so surrounding anatomy stays visible
+  roi_context_scale: 2.0
+  min_crop_px: 48
+
+  aug_hflip: true
+  aug_vflip: false            # axial CT has a fixed A/P orientation
+  aug_rotate_deg: 10.0
+  aug_scale: 0.1
+  aug_translate: 0.05
+  aug_brightness: 0.1
+  aug_contrast: 0.1
+  hist_equalize: false        # images are already windowed at 50/450 HU
+
+  num_workers: 4
+  pin_memory: true
+  balanced_sampler: true
+
+model:
+  name: swin
+  backbone: swin_tiny_patch4_window7_224
+  pretrained: true
+  finetune: llrd
+  hidden_dim: 256
+  dropout: 0.3
+  routing: soft
+  router_aggregate: logit
+  share_expert_trunk: false
+
+optim:
+  optimizer: adamw
+  lr: 1.0e-4
+  llrd: 0.7
+  weight_decay: 0.05
+  epochs: 60
+  batch_size: 16
+  grad_accum_steps: 1
+  grad_clip: 1.0
+  scheduler: warmup_cosine
+  warmup_epochs: 3
+  min_lr_factor: 0.01
+  early_stop_patience: 15
+  early_stop_min_epochs: 20
+  amp: true
+
+loss:
+  ce_weight: 1.0
+  class_weighting: inverse
+  label_smoothing: 0.0
+  tversky_weight: 1.0
+  tversky_alpha: 0.7          # alpha > beta penalises false negatives on rare clusters
+  tversky_beta: 0.3
+  tversky_smooth: 1.0
+  lambda_region: 0.1
+  contrastive_weight: 0.0     # only the vit_cl baseline uses this
+  contrastive_temperature: 0.07
+
+cv:
+  n_splits: 10
+  n_repeats: 5                # a single 10-fold at 287 patients is too noisy
+  seed: 1337
+  inner_val_fraction: 0.15
+  require_all_classes_per_fold: true
+
+runtime:
+  device: auto                # cuda / mps / cpu, resolved at runtime
+  n_parallel_jobs: 0          # 0 = one worker per visible GPU
+  use_ddp: false              # fold-level parallelism beats DDP for ~400 short jobs
+  seed: 1337
+  deterministic: true
+  resume: true
+
+output_dir: results
+experiment: base
+smoke_test: false

@@ -1,0 +1,17 @@
+_base_: ../base.yaml
+# Clinical covariates alone, trained as a torch model.
+#
+# Exists so that the fusion-minus-clinical difference is not confounded by the
+# optimiser. clinical_only (row 80) is scikit-learn logistic regression, so
+# fusion beating it could in principle be an artefact of AdamW, the cosine
+# schedule, the balanced sampler or the Tversky term rather than of imaging. This
+# row shares the entire training loop with fusion and differs only in having no
+# image branch.
+#
+# Report row 80 as the clinical baseline and this row as the control for that
+# comparison.
+#
+# REQUIRES data.clinical_csv.
+experiment: clinical_net
+model:
+  name: clinical_net

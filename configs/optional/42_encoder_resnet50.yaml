@@ -1,0 +1,19 @@
+_base_: ../base.yaml
+
+# Encoder-comparison axis, third row: plain ImageNet ResNet-50.
+#
+# This exists so the encoder axis is runnable without RadImageNet. The literature
+# question is whether radiology-specific pretraining beats ImageNet at n<1000, and
+# the honest answer in the sources is "unclear" - RadImageNet reports wins (Mei et
+# al. 2022) while RadiologyNET reports parity (Napravnik et al. 2025). Running
+# Swin-T / DINOv2 ViT-B / ResNet-50 under one fixed recipe answers the weaker but
+# still publishable question of whether the encoder family matters here at all.
+#
+# If RadImageNet weights are obtained and converted, 41_encoder_radimagenet.yaml
+# adds the radiology-pretrained row using the same ResNet-50 architecture, which
+# makes it a clean controlled comparison against this config.
+experiment: encoder_resnet50
+model:
+  name: routed
+  backbone: resnet50
+  routing: soft

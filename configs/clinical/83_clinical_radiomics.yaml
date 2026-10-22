@@ -1,0 +1,16 @@
+_base_: ../base.yaml
+# Radiomics features and clinical covariates concatenated, gradient boosting.
+#
+# The strongest non-deep comparator available: it gets both the texture
+# information the radiomics rows use and the covariates the clinical rows use,
+# without any pretrained representation. If this matches the fusion model, the
+# deep image branch is not earning its place.
+#
+# Same caveat as the other radiomics rows: features come from 8-bit slices already
+# windowed at 50/450 HU, so intensity statistics are NOT HU-calibrated and are not
+# comparable to published HU-based radiomics.
+#
+# REQUIRES data.clinical_csv.
+experiment: clinical_radiomics
+model:
+  name: clinical_radiomics
