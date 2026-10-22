@@ -25,21 +25,23 @@ attention maps on real CT crops, so both are excluded. Checkpoints are derived f
 patient data and individually exceed GitHub's file-size limit. `.gitignore` enforces
 all of this with deliberately broad patterns; please keep it that way.
 
-The code is runnable against an equivalently structured cohort of your own.
-`detection_data_NIH/PUT_DATA_HERE.txt` documents the layout the loader expects. The
-cohort statistics quoted below are the aggregate counts reported in the paper.
+The code is runnable against an equivalently structured cohort of your own; `INSTALL.md`
+documents the directory layout the loader expects. The cohort statistics quoted below are
+the aggregate counts reported in the paper.
 
 Pretrained ImageNet backbones are not bundled either; `python -m ppgl.cli fetch-weights`
 downloads them from the Hugging Face hub into a local `weights/` cache.
 
 ## Licence
 
-**Not yet chosen — see the repository owner before reuse.** Note for whoever sets this:
-contributions by NIH federal employees were made as part of their official duties and
-are considered Works of the United States Government, which affects how this can be
-licensed. Settle that with the NIH co-authors and your institution's tech-transfer
-office before adding a `LICENSE` file. Until one exists, default copyright applies and
-others have no grant to reuse the code.
+Released under the MIT Licence; see [`LICENSE`](LICENSE).
+
+One qualification. Contributions by NIH federal employees were made as part of their
+official duties and are therefore Works of the United States Government, which are not
+subject to copyright protection in the United States. The MIT grant covers the portions
+that are copyrightable; the USG-authored portions carry no copyright to grant and are in
+the public domain in the US. If you need a definitive allocation for your own compliance
+purposes, ask the corresponding author rather than inferring it from the file headers.
 
 ---
 
@@ -252,7 +254,7 @@ Full environment notes are in `INSTALL.md`. In short:
 
 ```bash
 pip install -r requirements.txt
-# put the archive under detection_data_NIH/original/ (see the placeholder file)
+# point it at your cohort under detection_data_NIH/original/ (layout: INSTALL.md)
 python -m ppgl.cli doctor            # environment + data check
 python -m ppgl.cli fetch-weights     # pretrained backbones, if the host has internet
 ```
