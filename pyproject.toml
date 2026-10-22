@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ppgl"
+version = "0.1.0"
+description = "Anatomy-routed genetic-cluster classification of PPGL from CT (ISBI 2027)"
+requires-python = ">=3.9"
+
+[tool.setuptools.packages.find]
+include = ["ppgl*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
