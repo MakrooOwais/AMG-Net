@@ -1,0 +1,15 @@
+_base_: ../base.yaml
+
+# Fine-tuning ablation: frozen backbone, heads only. This is the floor for the
+# deep models - worth knowing before a reviewer asks, because if a frozen encoder
+# with a linear head matches the fine-tuned model then the fine-tuning is doing
+# nothing at this sample size.
+experiment: finetune_linear_probe
+model:
+  name: routed
+  backbone: swin_tiny_patch4_window7_224
+  routing: soft
+  finetune: linear_probe
+optim:
+  lr: 1.0e-3
+  epochs: 40

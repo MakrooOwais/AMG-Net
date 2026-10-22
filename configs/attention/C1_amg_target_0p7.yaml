@@ -1,0 +1,18 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free relaxation 1 of 4: cap the demand at 70% of attention mass inside the
+# lesion instead of maximising it.
+#
+# Motivation is specific to what the annotation actually is. The target is a
+# bounding BOX, and for a roughly round lesion about a fifth of that box is
+# background - so demanding all of the attention inside demands attention on tissue
+# that is not tumour. It also forbids the model from using peritumoral context,
+# which in PPGL imaging is not obviously uninformative.
+#
+# Differs from the superseded 93_target_0p7.yaml in two ways: no auxiliary region
+# head (inherited from 40_amg.yaml), and the comparison point is lambda=3.0 rather
+# than 0.3. The second change is deliberate - relaxing the constraint is only
+# interesting as an ablation OF THE REPORTED METHOD, and the reported method runs at
+# lambda=3.0. Read this row against 40_amg, not against a lambda=0.3 row.
+experiment: amg_target_0p7
+loss:
+  attention_target: 0.7

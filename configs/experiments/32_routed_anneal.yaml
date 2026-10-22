@@ -1,0 +1,16 @@
+_base_: ../base.yaml
+
+# Fix 2: dense-to-sparse temperature annealing. Routing starts near-uniform (so
+# every expert receives gradient early, which matters when head & neck has only
+# ~64 slices) and sharpens over training.
+#
+# This mechanism is NOT novel - it is EvoMoE's dense-to-sparse gate (2021) - and
+# must be cited as prior art, not claimed. What is new here is measuring its
+# effect on the routing gap in a small-N radiogenomics setting.
+experiment: routed_anneal
+model:
+  name: routed
+  backbone: swin_tiny_patch4_window7_224
+  routing: anneal
+  anneal_start_temp: 4.0
+  anneal_end_temp: 0.5

@@ -1,0 +1,22 @@
+_base_: _shared.yaml
+# Two-stage schedule: supervise attention early, then decay the term to zero and
+# finish on classification alone.
+#
+# This is the schedule used by Di Stefano et al. (2026), who treat lesion-focused
+# attention as a *pretraining* objective and then fine-tune with cross-entropy on
+# its own. The rationale is that the supervision's job is to put the encoder in a
+# good basin - once attention is on the lesion, continuing to constrain it only
+# limits what the classifier can do with the features.
+#
+# lambda_attention falls linearly to zero over the first half of training. Our
+# measured run reached 98% mass well before that, so by the time the term switches
+# off the localisation has already happened.
+#
+# Reference: Di Stefano et al., "Enhancing accuracy and explainability in
+# colorectal lesion classification with attention-supervised Vision Transformers"
+# (2026), which proposes a Lesion-Focused Attention loss on last-layer attention
+# using expert bounding boxes, applied as pretraining followed by cross-entropy
+# fine-tuning. https://pubmed.ncbi.nlm.nih.gov/41581326/
+experiment: attn_warmup
+loss:
+  attention_warmup_frac: 0.5

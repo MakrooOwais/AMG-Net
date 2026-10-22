@@ -1,0 +1,16 @@
+_base_: _shared.yaml
+# Require only the BEST head to localise, instead of the head average.
+#
+# The default averages all 12 heads and pushes that average onto the lesion, which
+# constrains every head at once. Heads specialise, and some of the model's useful
+# behaviour is global - forcing all of them onto a 20%-of-frame target removes
+# that diversity. Scoring the attention mass per head and taking the maximum is a
+# strictly weaker demand (the best head's mass is always at least the head mean),
+# so one head must localise while the others stay free.
+#
+# If this matches or beats the head-mean row, the interesting reading is that the
+# benefit comes from *having* a lesion-focused pathway rather than from removing
+# every other pathway.
+experiment: attn_heads_max
+model:
+  attention_heads: max

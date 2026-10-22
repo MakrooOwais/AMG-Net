@@ -1,0 +1,22 @@
+_base_: ../base.yaml
+# Mixup + CutMix on top of the strongest non-routed model.
+#
+# single_head_aux is the base for every Tier-3 row (22-26) rather than swin,
+# because it is the strongest non-routed model on this cohort (0.402 vs 0.380
+# patient macro-F1) and it supports all of the options being tested. The routed
+# variants are not used as a base: model.head_type does not apply to them, so
+# the rows would not be mutually comparable.
+#
+# One of mixup or cutmix is chosen at random per batch, and only on mix_prob of
+# batches, so the model still sees unmixed images. The training objective keeps
+# every component: the batch is evaluated against both label sets and the two
+# losses are blended by lambda, rather than building a soft target that the
+# Tversky and auxiliary region terms cannot consume.
+experiment: aux_mixup
+model:
+  name: single_head_aux
+  backbone: swin_tiny_patch4_window7_224
+optim:
+  mixup_alpha: 0.4
+  cutmix_alpha: 1.0
+  mix_prob: 0.5

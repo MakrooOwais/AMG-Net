@@ -1,0 +1,23 @@
+_base_: _shared.yaml
+# Supervise attention ROLLOUT instead of the final block's raw attention.
+#
+# Raw single-layer attention is a weak proxy for how much a patch actually
+# influences the class token, because the residual stream carries information
+# around every attention operation. Abnar & Zuidema (ACL 2020) show that rollout -
+# attention matrices multiplied across blocks with the identity mixed in to
+# account for the residual - correlates far better with genuine input importance
+# than raw attention does.
+#
+# That makes this arguably the better-founded target: supervising rollout
+# constrains where the class token's information actually comes from, rather than
+# where one layer happens to point. It is also the more expensive one, since every
+# watched block must use the explicit (non-fused) attention path and the gradient
+# runs through the whole product.
+#
+# Rolled over the last 6 blocks rather than all 12: it keeps the memory and the
+# gradient path manageable, and the early blocks of a ViT are close to
+# position-local anyway so they contribute little to the class token's routing.
+experiment: attn_rollout
+model:
+  attention_source: rollout
+  attention_rollout_layers: 6

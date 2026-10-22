@@ -1,0 +1,8 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free lambda sweep, upper extension 2 of 2. See B6 for the rationale.
+#
+# At this weight the attention term dominates the objective by two orders of magnitude
+# over cross-entropy, so if the curve has not turned by here it will not turn.
+experiment: amg_lam_300
+loss:
+  lambda_attention: 300.0

@@ -1,0 +1,22 @@
+_base_: ../base.yaml
+# Attention supervision WITHOUT LoRA: full fine-tuning, same localisation term.
+#
+# Completes the 2x2 over {full fine-tune, LoRA} x {no supervision, supervision}:
+#
+#                     no supervision      supervision
+#   full fine-tune    vit                 attn_full   (this row)
+#   LoRA              lora_vit            attn_lora
+#
+# With all four, an effect can be attributed. With only attn_lora and vit it
+# cannot, which is the trap the original prototype fell into - it varied the
+# encoder, the adaptation method, the loss and the evaluation protocol together.
+#
+# Full fine-tuning uses the standard 1e-4 with layer-wise decay, so this row is
+# directly comparable to the vit baseline.
+experiment: attn_full
+model:
+  name: attn_lora
+  backbone: vit_base_patch16_224
+  finetune: llrd
+loss:
+  lambda_attention: 0.3

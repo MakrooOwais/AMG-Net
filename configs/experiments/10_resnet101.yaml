@@ -1,0 +1,7 @@
+_base_: ../base.yaml
+
+# Baseline 1 of 4 from the prior work, re-trained on our folds.
+experiment: resnet101
+model:
+  name: resnet101
+  backbone: resnet101

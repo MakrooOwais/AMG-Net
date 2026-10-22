@@ -1,0 +1,37 @@
+_base_: ../base.yaml
+# ViT + LoRA + class-token attention supervised toward the lesion box.
+#
+# The hypothesis worth testing on this cohort: at 630 slices the constraint that
+# helps is not more capacity but a restriction on WHERE the encoder looks. Every
+# other row in the grid is free to key off whatever background texture happens to
+# correlate with genetic cluster in these particular scans, and with 287 patients
+# there is plenty of such texture. The annotation boxes are the only supervision
+# available for that, and the pipeline currently spends them on cropping alone.
+#
+# The localisation term is -log of the attention mass falling inside the lesion.
+# It is scale-correct, unlike a Dice or MSE comparison between a softmax
+# distribution over ~196 patches (entries ~0.005) and a 0/1 mask, where the
+# optimum is unreachable and the loss is nearly constant.
+#
+# Note on the crop. At crop_mode=roi_context the lesion covers a median 41 of 196
+# patches, so 79% of the frame is available to look at wrongly - the target is
+# well posed. A tight roi crop would make it vacuous (config validation refuses
+# that combination) and a full slice leaves only ~2 patches, too sparse to learn.
+#
+# Read this row against THREE others, or it says nothing:
+#   vit        full fine-tune, no supervision
+#   lora_vit   LoRA, no supervision            <- isolates LoRA
+#   attn_full  full fine-tune, supervision     <- isolates supervision
+# attn_lora minus lora_vit is the effect of the supervision itself.
+experiment: attn_lora
+model:
+  name: attn_lora
+  backbone: vit_base_patch16_224
+  finetune: lora
+  lora_r: 16
+  lora_alpha: 32.0
+  lora_targets: [qkv, proj, fc1, fc2]
+loss:
+  lambda_attention: 0.3
+optim:
+  lr: 5.0e-4

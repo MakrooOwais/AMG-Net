@@ -1,0 +1,7 @@
+_base_: _shared.yaml
+# Seed replicate 2 of 3 at the current best lambda. See 99a for the rationale.
+experiment: attn_lam_3p0_s2024
+loss:
+  lambda_attention: 3.0
+runtime:
+  seed: 2024

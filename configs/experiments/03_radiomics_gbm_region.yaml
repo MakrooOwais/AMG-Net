@@ -1,0 +1,8 @@
+_base_: ../base.yaml
+
+# Radiomics + gradient boosting with the anatomical region appended as a feature.
+# Isolates how much the region label adds on top of image texture, which is the
+# tabular analogue of the routing question.
+experiment: radiomics_gbm_region
+model:
+  name: radiomics_gbm_region

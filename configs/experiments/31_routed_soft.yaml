@@ -1,0 +1,11 @@
+_base_: ../base.yaml
+
+# Fix 1: soft router probabilities at BOTH training and inference, so the
+# train/inference routing rule is identical and the mismatch is removed.
+# This is the primary proposed configuration.
+experiment: routed_soft
+model:
+  name: routed
+  backbone: swin_tiny_patch4_window7_224
+  routing: soft
+  router_temperature: 1.0

@@ -1,0 +1,21 @@
+_base_: ../base.yaml
+# Logit adjustment / balanced softmax (Menon et al., ICLR 2021): add
+# tau * log(class prior) to the logits inside the cross-entropy term.
+#
+# class_weighting is set to none deliberately. Logit adjustment and
+# inverse-frequency weighting correct the SAME class prior, so running both
+# double-corrects it. The trainer would warn and ignore the weights for the CE
+# term anyway; setting it here makes the intent explicit in the config that gets
+# archived with the run.
+#
+# Worth noting where this can and cannot help. The prior is skewed enough to
+# matter on the 4-class target (max logit shift 1.19) and on cluster3 (1.46). On
+# sdhx_vs_rest the classes are 353 vs 277 and the shift is only 0.24, so this is
+# nearly a no-op there by construction and folds should not be spent on it.
+experiment: aux_logit_adjust
+model:
+  name: single_head_aux
+  backbone: swin_tiny_patch4_window7_224
+loss:
+  logit_adjust_tau: 1.0
+  class_weighting: none

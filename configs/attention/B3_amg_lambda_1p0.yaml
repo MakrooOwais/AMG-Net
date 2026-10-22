@@ -1,0 +1,5 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free lambda sweep, point 3 of 5. See B1 for why these configs exist.
+experiment: amg_lam_1p0
+loss:
+  lambda_attention: 1.0

@@ -1,0 +1,19 @@
+_base_: ../base.yaml
+# Shared settings for the attention-supervision sweep. Every config in this
+# directory inherits from here and changes ONE thing, so each row is an ablation
+# against configs/experiments/28_attn_lora.yaml rather than a new design.
+#
+# These values are exactly the ones that produced patient macro-F1 0.4312:
+#   ViT-B/16, LoRA r=16 alpha=32 on qkv/proj/fc1/fc2, lr 5e-4,
+#   lambda_attention 0.3, attention_target 1.0, source=last, heads=mean.
+model:
+  name: attn_lora
+  backbone: vit_base_patch16_224
+  finetune: lora
+  lora_r: 16
+  lora_alpha: 32.0
+  lora_targets: [qkv, proj, fc1, fc2]
+loss:
+  lambda_attention: 0.3
+optim:
+  lr: 5.0e-4

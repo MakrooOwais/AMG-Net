@@ -1,0 +1,14 @@
+_base_: ../base.yaml
+
+# Reproduces the rejected submission's behaviour: experts are selected with the
+# GROUND-TRUTH one-hot region during training, but combined with SOFT router
+# probabilities at inference. Each expert therefore only ever sees hard-routed
+# samples and is then evaluated on blended ones.
+#
+# Kept so the train/inference routing mismatch can be MEASURED rather than
+# assumed. The oracle-minus-soft gap on this row is the paper's headline number.
+experiment: routed_hard
+model:
+  name: routed
+  backbone: swin_tiny_patch4_window7_224
+  routing: hard

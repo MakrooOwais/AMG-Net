@@ -1,0 +1,21 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free relaxation 2 of 4: supervise attention ROLLOUT over the last 6 blocks
+# instead of the final block's raw class-token attention.
+#
+# Raw single-layer attention is a weak proxy for how much a patch actually
+# influences the class token, because the residual stream carries information around
+# every attention operation. Abnar & Zuidema (ACL 2020) show that rollout -
+# attention matrices multiplied across blocks with the identity mixed in to account
+# for the residual - correlates better with genuine input importance.
+#
+# That makes this arguably the better-founded target, which is why its failure in
+# the pilot is worth reporting rather than hiding: it was the only one of the four
+# whose loss EXCEEDED the noise floor, and it reached the lowest final attention
+# mass, consistent with being the most diffuse target.
+#
+# Supersedes 94_rollout.yaml; see C1 for what changed and why the baseline is
+# lambda=3.0.
+experiment: amg_rollout
+model:
+  attention_source: rollout
+  attention_rollout_layers: 6

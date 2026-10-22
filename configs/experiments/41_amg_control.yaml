@@ -1,0 +1,24 @@
+_base_: ../base.yaml
+# THE MATCHED CONTROL for 40_amg.yaml. Identical in every respect except that the
+# attention-mass term is off.
+#
+# This is the only comparison that isolates the contribution of the proposed loss:
+# same encoder, same LoRA adapters and rank, same learning rate, same schedule, same
+# folds, same seed, no region labels on either side. The difference between this row
+# and 40_amg is lambda_attention alone.
+experiment: amg_control
+model:
+  name: attn_lora
+  backbone: vit_base_patch16_224
+  finetune: lora
+  lora_r: 16
+  lora_alpha: 32.0
+  lora_targets: [qkv, proj, fc1, fc2]
+  aux_region: false
+data:
+  location_source: none
+loss:
+  lambda_attention: 0.0
+  lambda_region: 0.0
+optim:
+  lr: 5.0e-4

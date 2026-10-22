@@ -1,0 +1,7 @@
+_base_: ../base.yaml
+
+# Baseline 2 of 4: plain ImageNet ViT-B/16.
+experiment: vit
+model:
+  name: vit
+  backbone: vit_base_patch16_224

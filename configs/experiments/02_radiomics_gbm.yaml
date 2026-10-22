@@ -1,0 +1,12 @@
+_base_: ../base.yaml
+
+# Radiomics + gradient boosting: the comparator the PPGL imaging literature
+# actually uses (Zhou et al. 2024/2025; Yi et al.). The rejected submission had
+# none, and Reviewer #2 asked for more competitive baselines (comment 7).
+#
+# Caveat that must appear in the paper: features are computed on 8-bit slices
+# already windowed at 50/450 HU, so intensity statistics are NOT HU-calibrated
+# and are not comparable to published HU-based radiomics.
+experiment: radiomics_gbm
+model:
+  name: radiomics_gbm

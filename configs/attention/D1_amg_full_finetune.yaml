@@ -1,0 +1,28 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free 2x2 completion: AMG supervision WITHOUT LoRA (full fine-tuning with
+# layer-wise LR decay), so the effect of adaptation and the effect of supervision can
+# be separated.
+#
+#                     no supervision              supervision
+#   full fine-tune    vit          (clean, 4)     amg_full   (this row)
+#   LoRA              amg_control  (41_amg)       amg        (40_amg)
+#
+# With all four cells an effect can be attributed. With only the AMG row and the ViT
+# baseline it cannot - which is the trap the original prototype fell into, varying
+# encoder, adaptation method, loss and evaluation protocol together.
+#
+# Note the top-left cell needs no new run: the region-free `vit` baseline already in
+# results_2 IS full fine-tuning without supervision. Only this cell was missing a
+# region-free counterpart, because the superseded 29_attn_full.yaml carried the
+# auxiliary region head.
+#
+# lambda_attention stays at the reported 3.0 rather than the pilot's 0.3, so this row
+# reads against 40_amg directly.
+#
+# Full fine-tuning uses the standard 1e-4 with layer-wise decay, matching the `vit`
+# baseline, so the left column is a fair comparison.
+experiment: amg_full
+model:
+  finetune: llrd
+optim:
+  lr: 1.0e-4

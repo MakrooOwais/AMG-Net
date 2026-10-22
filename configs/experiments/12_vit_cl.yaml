@@ -1,0 +1,13 @@
+_base_: ../base.yaml
+
+# Baseline 3 of 4: ViT with a supervised-contrastive auxiliary loss (the "ViT+CL"
+# row in the prior work). This is the ONLY model in the codebase that uses a
+# contrastive term - the rejected manuscript claimed one for the proposed model
+# in its abstract, highlights and contributions while the method contained none.
+experiment: vit_cl
+model:
+  name: vit_cl
+  backbone: vit_base_patch16_224
+loss:
+  contrastive_weight: 1.0
+  contrastive_temperature: 0.07

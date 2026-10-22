@@ -1,0 +1,8 @@
+_base_: ../base.yaml
+
+# Floor for the location-only control: the empirical cluster distribution within
+# each anatomical region. Any model that does not clearly beat this is not
+# learning an imaging phenotype.
+experiment: region_majority
+model:
+  name: region_majority

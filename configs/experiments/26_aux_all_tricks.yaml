@@ -1,0 +1,28 @@
+_base_: ../base.yaml
+# Every Tier-3 technique at once: mixup/cutmix, cosine-prototype head, logit
+# adjustment, and test-time augmentation.
+#
+# This row exists because the individual techniques are each expected to be worth
+# a few points at most, which is below what this fold count can resolve. Stacking
+# them is the only configuration with a plausible route to a detectable
+# difference. It is deliberately NOT a controlled ablation - rows 22-25 provide
+# the one-at-a-time comparisons, and this row answers whether the combination is
+# worth reporting at all.
+#
+# If this row does not beat single_head_aux, the honest conclusion is that
+# regularisation and decision-rule corrections do not address the limit on this
+# task, and the paper should say so.
+experiment: aux_all_tricks
+model:
+  name: single_head_aux
+  backbone: swin_tiny_patch4_window7_224
+  head_type: prototype
+optim:
+  mixup_alpha: 0.4
+  cutmix_alpha: 1.0
+  mix_prob: 0.5
+loss:
+  logit_adjust_tau: 1.0
+  class_weighting: none     # logit adjustment already corrects the prior
+data:
+  tta: 2

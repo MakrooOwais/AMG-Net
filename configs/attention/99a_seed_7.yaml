@@ -1,0 +1,21 @@
+_base_: _shared.yaml
+# Seed replicate 1 of 3 at the current best lambda.
+#
+# This is the most important row in the directory. Two runs of the same settings
+# (attn_lora, and base which re-ran them) differed by +0.028 in the mean patient
+# macro-F1, with a per-fold SD of 0.126 and NOT ONE of 50 folds identical. Every
+# effect in the sweep is 0.006-0.042, i.e. the same size as that gap. Without
+# replicates there is no way to tell an effect from a re-run, and no claim in the
+# paper is defensible.
+#
+# cv.seed is untouched, so the folds are identical to every other row and the
+# comparison stays paired. Only runtime.seed changes, which reseeds weight
+# initialisation, sampler order, augmentation draws and mixing - the training
+# randomness and nothing else. runtime is excluded from the config fingerprint, so
+# these rows need distinct experiment names to avoid colliding in the store, which
+# is why the seed appears in the name.
+experiment: attn_lam_3p0_s7
+loss:
+  lambda_attention: 3.0
+runtime:
+  seed: 7

@@ -1,0 +1,27 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free relaxation 4 of 4: two-stage schedule - supervise attention early,
+# then decay the term to zero and finish on classification alone.
+#
+# This is the schedule used by Di Stefano et al. (2026), who treat lesion-focused
+# attention as a PRETRAINING objective and then fine-tune with cross-entropy alone.
+# The rationale is that the supervision's job is to put the encoder in a good basin;
+# once attention is on the lesion, continuing to constrain it only limits what the
+# classifier can do with the features.
+#
+# This is therefore the single most important row in the ablation: it is the closest
+# prior art's schedule, evaluated inside our own setup. If keeping the term on
+# throughout beats decaying it, that is a direct empirical argument for the design
+# choice that distinguishes AMG from that work, and it is the difference between a
+# reviewer seeing a contribution and seeing a reimplementation.
+#
+# lambda_attention falls linearly to zero over the first half of training.
+#
+# Reference: Di Stefano et al., "Enhancing accuracy and explainability in colorectal
+# lesion classification with attention-supervised Vision Transformers" (2026).
+# https://pubmed.ncbi.nlm.nih.gov/41581326/
+#
+# Supersedes 96_warmup.yaml; see C1 for what changed and why the baseline is
+# lambda=3.0.
+experiment: amg_warmup
+loss:
+  attention_warmup_frac: 0.5

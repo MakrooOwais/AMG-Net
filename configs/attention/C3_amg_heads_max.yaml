@@ -1,0 +1,19 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free relaxation 3 of 4: require only the BEST head to localise, instead of
+# the head average.
+#
+# The default averages all 12 heads and pushes that average onto the lesion, which
+# constrains every head at once. Heads specialise, and some useful behaviour is
+# global. Scoring attention mass per head and taking the maximum is a strictly
+# weaker demand - the best head's mass is always at least the head mean - so one
+# head must localise while the others stay free.
+#
+# If this matches the head-mean row, the reading is that the benefit comes from
+# HAVING a lesion-focused pathway rather than from removing every other pathway. In
+# the pilot it did not, which is what supports the regulariser interpretation.
+#
+# Supersedes 95_heads_max.yaml; see C1 for what changed and why the baseline is
+# lambda=3.0.
+experiment: amg_heads_max
+model:
+  attention_heads: max

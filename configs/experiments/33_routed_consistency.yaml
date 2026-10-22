@@ -1,0 +1,13 @@
+_base_: ../base.yaml
+
+# Fix 3: soft routing plus a router entropy/utilisation penalty. The utilisation
+# term targets the OBSERVED region distribution rather than a uniform prior,
+# because the anatomical imbalance in this cohort is real and should not be
+# equalised away. Closest analogue in the literature is teacher-guided routing
+# with a load-balancing loss (Kada et al. 2026).
+experiment: routed_consistency
+model:
+  name: routed
+  backbone: swin_tiny_patch4_window7_224
+  routing: consistency
+  consistency_weight: 0.1

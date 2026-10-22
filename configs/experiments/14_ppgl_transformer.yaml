@@ -1,0 +1,13 @@
+_base_: ../base.yaml
+
+# Baseline 4 of 4: reimplementation of the two-branch model of Santra et al.
+# (MICCAI AMAI 2023). Reference code was unavailable, so this is reimplemented
+# from the paper description and must be described as such.
+#
+# The distinction Reviewer #2 asked about (comment 2): here the region signal is
+# CONCATENATED as a feature into one shared classifier. In the routed model the
+# region signal SELECTS among separate expert classifiers.
+experiment: ppgl_transformer
+model:
+  name: ppgl_transformer
+  backbone: vit_base_patch16_224

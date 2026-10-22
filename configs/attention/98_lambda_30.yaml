@@ -1,0 +1,9 @@
+_base_: _shared.yaml
+# Far past any plausible optimum. At this weight the localisation term dominates
+# the classification term outright, so this row exists to make the curve turn over.
+# If it does not, something is wrong with the interpretation rather than with the
+# weight - a term that helps monotonically over three orders of magnitude is not
+# acting as the regulariser we think it is.
+experiment: attn_lam_30
+loss:
+  lambda_attention: 30.0

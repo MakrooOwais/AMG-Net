@@ -1,0 +1,11 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free lambda sweep, point 1 of 5.
+#
+# Replaces configs/attention/90_lambda_0p1.yaml, whose row carried an auxiliary
+# region head and therefore cannot be reported (see configs/attention/RESULTS.md).
+# Inherits every region-free setting from 40_amg.yaml - aux_region false,
+# lambda_region 0, location_source none - and varies only the AMG weight, so the
+# sweep isolates the dose of the attention constraint.
+experiment: amg_lam_0p1
+loss:
+  lambda_attention: 0.1

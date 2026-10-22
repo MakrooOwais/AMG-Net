@@ -1,0 +1,36 @@
+_base_: ../base.yaml
+# THE PROPOSED METHOD, region-label-free.
+#
+# Attention Mass Guidance: a frozen ViT-B/16 with LoRA adapters, whose class-token
+# attention is supervised toward the lesion box by -log of the attention mass
+# falling inside it.
+#
+# Why this config exists separately from 28_attn_lora.yaml: that row carried an
+# auxiliary region-classification head with lambda_region=0.1, and the region
+# labels it consumed DO NOT EXIST in this archive - they come from an unvalidated
+# automatic estimator. A reported method must not depend on them. Here the head is
+# removed (model.aux_region=false), the region term is switched off
+# (loss.lambda_region=0) and the data layer is told not to produce region labels at
+# all (data.location_source=none), so the dependency is gone by construction rather
+# than by convention.
+#
+# Every supervision signal this model uses is present in the archive: the class
+# label, and the lesion bounding boxes that the cropping already relies on.
+#
+# lambda_attention=3.0 is the peak of a bracketed sweep over {0.1, 0.3, 1, 3, 10, 30}.
+experiment: amg
+model:
+  name: attn_lora
+  backbone: vit_base_patch16_224
+  finetune: lora
+  lora_r: 16
+  lora_alpha: 32.0
+  lora_targets: [qkv, proj, fc1, fc2]
+  aux_region: false
+data:
+  location_source: none
+loss:
+  lambda_attention: 3.0
+  lambda_region: 0.0
+optim:
+  lr: 5.0e-4

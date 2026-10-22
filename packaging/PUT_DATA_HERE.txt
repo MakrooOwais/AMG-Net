@@ -1,0 +1,33 @@
+No imaging data is distributed with this repository, and none will be.
+
+The cohort is retrospective human-subjects CT acquired at the National Institutes
+of Health under an approved institutional review board protocol. It is not ours to
+redistribute, and access is governed by that protocol rather than by this
+repository. Please do not open issues requesting it.
+
+This directory exists so that the pipeline has a documented place to look if you
+hold an equivalently structured cohort of your own.
+
+Expected layout, relative to the project root:
+
+  detection_data_NIH/original/Slices/{CLASS}_{ID}/{ID}_{STUDY}_Slice_{N}.tiff
+  detection_data_NIH/original/XMLs/  {CLASS}_{ID}/{ID}_{STUDY}_Slice_{N}.xml
+
+where {CLASS} is one of SDHx, VHL_EPAS1, Kinase, Sporadic. Slices are 8-bit
+pre-windowed axial venous-phase TIFFs; each XML carries the lesion bounding
+boxes for its slice. There are no segmentation contours.
+
+To use a copy that lives elsewhere, either symlink it:
+
+  ln -s /path/to/your/cohort detection_data_NIH
+
+or point the config at it and leave the data where it is:
+
+  ./run_all.sh --set data.root=/path/to/your/cohort/original
+
+Only original/ is read. If your layout has sibling train/ and test/ directories,
+they are ignored on purpose: a flat split that drops the class prefix cannot
+distinguish two patients who share a numeric ID, and numeric IDs are reused
+across classes in this cohort (84 collisions). Splitting on the bare number
+merges distinct patients and leaks them between training and test. The patient
+key is therefore {CLASS}_{ID}, never {ID} alone.

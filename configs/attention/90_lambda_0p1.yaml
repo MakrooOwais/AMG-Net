@@ -1,0 +1,7 @@
+_base_: _shared.yaml
+# Weaker supervision. At lambda=0.3 the attention mass inside the lesion reached
+# 98%, which is far past what the objective needs to change behaviour, so the
+# interesting question is whether a lighter touch classifies as well or better.
+experiment: attn_lam_0p1
+loss:
+  lambda_attention: 0.1

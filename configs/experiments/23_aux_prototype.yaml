@@ -1,0 +1,14 @@
+_base_: ../base.yaml
+# Cosine-prototype classifier head instead of the final linear layer.
+#
+# Rationale specific to this cohort: the rarest cluster has 74 slices, and a
+# linear head must fit hidden_dim free weights per class from that. Normalising
+# both the embedding and the prototypes removes the weight-norm degree of
+# freedom, which is the mechanism by which a linear classifier trades a rare
+# class's margin away for a common one. Logits are also bounded by the learned
+# scale, so the model is less able to be confidently wrong.
+experiment: aux_prototype
+model:
+  name: single_head_aux
+  backbone: swin_tiny_patch4_window7_224
+  head_type: prototype

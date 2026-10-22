@@ -1,0 +1,7 @@
+_base_: _shared.yaml
+# Deliberately too strong. Included to bracket the sweep: a curve needs a point
+# past the optimum, otherwise "0.3 was best" is indistinguishable from "we never
+# tried enough". Expect this row to lose.
+experiment: attn_lam_3p0
+loss:
+  lambda_attention: 3.0

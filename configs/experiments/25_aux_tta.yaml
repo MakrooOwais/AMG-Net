@@ -1,0 +1,19 @@
+_base_: ../base.yaml
+# Test-time augmentation: average the predicted distribution over the identity
+# view and its left-right mirror.
+#
+# Only horizontal flips are used. A vertical flip or a large rotation of an axial
+# CT slice is not an anatomically plausible view, so it would evaluate the model
+# on inputs outside the data distribution and the average would be over one
+# valid and one invalid observation.
+#
+# Training is unchanged from single_head_aux, so the difference between this row
+# and the single_head_aux row is purely the inference-time average. Note that
+# aug_hflip is already true during training, so the mirrored view is in
+# distribution.
+experiment: aux_tta
+model:
+  name: single_head_aux
+  backbone: swin_tiny_patch4_window7_224
+data:
+  tta: 2

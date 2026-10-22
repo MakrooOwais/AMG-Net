@@ -1,0 +1,15 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free lambda sweep, upper extension 1 of 2.
+#
+# The measured sweep over {0.1, 0.3, 1, 3, 10, 30} rises monotonically to its top point:
+# lambda=30 is the best of the six on all four metrics and no turnover was found. That
+# leaves the paper unable to describe the curve as characterising an optimum, which is a
+# stated limitation. B6 and B7 push an order of magnitude further to look for the turn.
+#
+# Either outcome is reportable. If performance falls by lambda=100 or 300, the sweep is
+# bracketed and the dose-response becomes a curve with an interior peak. If it does not,
+# that is itself worth a sentence: the objective tolerates an essentially hard constraint,
+# and the term is acting as a constraint rather than a weighted trade-off.
+experiment: amg_lam_100
+loss:
+  lambda_attention: 100.0

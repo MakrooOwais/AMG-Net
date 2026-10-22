@@ -1,0 +1,17 @@
+_base_: ../base.yaml
+
+# Capacity control for the expert-collapse criticism.
+#
+# Head & neck contributes ~64 slices (and zero kinase-signalling cases); chest
+# ~80 across four clusters. Three independent 768->256->4 experts is ~200k
+# parameters each, which those subsets cannot support. Sharing the trunk and
+# keeping only a per-region output layer cuts per-expert parameters by ~99%.
+#
+# If this matches or beats the full-capacity routed model, the honest conclusion
+# is that the per-region experts were never the mechanism doing the work.
+experiment: routed_shared_trunk
+model:
+  name: routed
+  backbone: swin_tiny_patch4_window7_224
+  routing: soft
+  share_expert_trunk: true

@@ -1,0 +1,9 @@
+_base_: _shared.yaml
+# The first sweep did not find the optimum. lambda 0.1 -> 0.3 -> 1.0 -> 3.0 gave
+# patient macro-F1 0.390 -> 0.403 -> 0.436 -> 0.445, monotone increasing, with the
+# best value at the largest lambda tried. lambda 3.0 was included as a
+# deliberately-too-strong bracketing point and it won, so the curve has not turned
+# over and the sweep has to be extended upward.
+experiment: attn_lam_10
+loss:
+  lambda_attention: 10.0

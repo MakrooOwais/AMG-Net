@@ -1,0 +1,21 @@
+_base_: ../experiments/41_amg_control.yaml
+# Seed replicate of the MATCHED CONTROL, mirroring A1 on the proposed side.
+#
+# Why this file has to exist rather than being a `--set runtime.seed=7` override:
+# config_fingerprint() deliberately drops the whole `runtime` section, so a seed
+# change is invisible to the resume check, and the experiment name would still be
+# `amg_control`. The folds would resolve to the already-complete directory and every
+# job would report `skipped`. A distinct `experiment:` is what makes a seed replicate
+# a separate row.
+#
+# cv.seed is untouched, so the folds are identical to every other row and all
+# comparisons stay paired. Only runtime.seed changes, which reseeds weight init,
+# sampler order and augmentation.
+#
+# Purpose: the headline comparison is currently a 4-seed mean on the proposed arm
+# against a single run on the control. E1-E3 make both arms 4-seed means, which
+# removes the only methodological asymmetry in the paper's central claim and yields a
+# between-seed noise floor for the control as well.
+experiment: amg_control_s7
+runtime:
+  seed: 7

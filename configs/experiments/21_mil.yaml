@@ -1,0 +1,27 @@
+_base_: ../base.yaml
+# Attention-based multiple-instance learning over each patient's slices
+# (Ilse et al., ICML 2018), so the prediction unit becomes the patient rather
+# than the slice.
+#
+# Expectation management, measured on this cohort: bag size is min 1, max 22,
+# mean 2.20, MEDIAN 1. Only 135/287 patients (47%) contribute more than one
+# slice, so for the other 53% attention is taken over a single instance and the
+# model is mathematically identical to the slice-level baseline. The achievable
+# effect is therefore bounded to roughly half the cohort, well under the ~+0.10
+# needed for significance at this fold count. It is worth one row in the table
+# and it produces genuinely interpretable per-slice weights, but it is not
+# expected to be the winning model.
+#
+# batch_size is reduced because each item is now a padded bag of up to
+# bag_max_slices instances, each of which goes through the backbone.
+experiment: mil
+model:
+  name: mil
+  backbone: swin_tiny_patch4_window7_224
+data:
+  # Cap TRAINING bags by random subsample each epoch, which doubles as
+  # bag-level augmentation. Only 9 patients exceed 8 slices, so this is nearly
+  # a no-op on this cohort. Evaluation always uses every slice.
+  bag_max_slices: 8
+optim:
+  batch_size: 4

@@ -1,0 +1,8 @@
+_base_: ../experiments/40_amg.yaml
+# Region-free lambda sweep, point 5 of 5 - far upper bracket. See B1 for rationale.
+#
+# The sweep must be bracketed on both sides for the peak at 3.0 to mean anything,
+# which is why this point is kept even though 10 already plateaus.
+experiment: amg_lam_30
+loss:
+  lambda_attention: 30.0

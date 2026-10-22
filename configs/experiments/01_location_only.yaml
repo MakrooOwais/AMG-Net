@@ -1,0 +1,14 @@
+_base_: ../base.yaml
+
+# THE DECISION-GATE EXPERIMENT. Multinomial logistic regression on the one-hot
+# anatomical region and nothing else - no image content whatsoever.
+#
+# If this matches the deep models, the paper's premise (that CT carries
+# genotype-relevant phenotype beyond anatomy) does not hold and the framing must
+# change. See ISBI2027_plan.md section 8. Run this first; it takes seconds.
+#
+# No published study quantifies this, though the location-genotype association is
+# well documented (Imperiale et al. EJNMMI 2026; Lima et al. 2023).
+experiment: location_only
+model:
+  name: location_only

@@ -1,0 +1,12 @@
+_base_: ../base.yaml
+
+# The correct "without region weight estimator" ablation.
+#
+# The rejected submission's ablation removed the region estimator entirely, which
+# also removed the auxiliary region supervision - so it changed two things at
+# once. This keeps the auxiliary region loss and removes ONLY the per-region
+# expert routing, so the comparison against the routed rows isolates routing.
+experiment: single_head_aux
+model:
+  name: single_head_aux
+  backbone: swin_tiny_patch4_window7_224

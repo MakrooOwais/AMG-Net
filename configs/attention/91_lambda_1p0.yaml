@@ -1,0 +1,6 @@
+_base_: _shared.yaml
+# Stronger supervision. Tests whether the localisation term is still helping at
+# the point where it starts to dominate the classification term.
+experiment: attn_lam_1p0
+loss:
+  lambda_attention: 1.0

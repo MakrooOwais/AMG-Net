@@ -1,0 +1,6 @@
+_base_: ../experiments/41_amg_control.yaml
+# Seed replicate of the matched control, mirroring A3. See E1 for why this is a file
+# rather than a --set override, and what it is for.
+experiment: amg_control_s31337
+runtime:
+  seed: 31337

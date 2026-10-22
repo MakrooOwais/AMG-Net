@@ -1,0 +1,26 @@
+_base_: ../base.yaml
+# Control for the attention-supervised rows: same ViT, same LoRA adapters, no
+# attention supervision.
+#
+# Without this row, attn_lora beating vit would be uninterpretable - it changes
+# two things at once (parameter-efficient adaptation, and where the model is told
+# to look). Rows 27 and 28 differ ONLY in loss.lambda_attention.
+#
+# LoRA targets cover the attention projections and the MLP, matching the adapter
+# placement of the prototype this came from (query/key/value/dense in HuggingFace
+# naming is qkv/proj/fc1/fc2 in timm). The backbone is frozen, so only the
+# adapters and the heads train.
+experiment: lora_vit
+model:
+  name: attn_lora
+  backbone: vit_base_patch16_224
+  finetune: lora
+  lora_r: 16
+  lora_alpha: 32.0
+  lora_targets: [qkv, proj, fc1, fc2]
+loss:
+  lambda_attention: 0.0        # supervision OFF - this is the control
+optim:
+  # A frozen backbone with only adapters training tolerates, and needs, a larger
+  # step than the 1e-4 used for full fine-tuning.
+  lr: 5.0e-4

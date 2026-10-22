@@ -1,0 +1,18 @@
+_base_: _shared.yaml
+# Cap the demand at 70% of attention mass inside the lesion, instead of
+# maximising it.
+#
+# Motivation is specific to what the annotation actually is. The target is a
+# bounding BOX, and for a roughly round lesion about a fifth of that box is
+# background - so demanding all of the attention inside demands attention on
+# tissue that is not tumour. It also forbids the model from using peritumoral
+# context, which in PPGL imaging is not obviously uninformative.
+#
+# The measured run reached 98% mass at target=1.0, which is well past the point
+# where the constraint is doing anything except removing freedom. With
+# target=0.7 the loss is exactly zero once the row is satisfied, while a row at
+# chance level (~20% mass) still receives a large gradient - so this caps the
+# demand without weakening the early signal.
+experiment: attn_target_0p7
+loss:
+  attention_target: 0.7

@@ -1,0 +1,18 @@
+_base_: ../base.yaml
+
+# Encoder-comparison axis (Reviewer #2 comment 7): DINOv2 self-supervised
+# features under the identical fine-tuning recipe.
+#
+# ViT-B/14 at 224 gives 16x16 patches; the backbone factory enables timm's
+# dynamic_img_size so the positional embeddings are interpolated from DINOv2's
+# native 518.
+#
+# Note the literature is genuinely split on whether domain-specific or
+# self-supervised pretraining beats ImageNet at n<1000 (RadImageNet reports wins;
+# RadiologyNET reports parity), so a null result here is publishable rather than
+# embarrassing.
+experiment: encoder_dinov2
+model:
+  name: routed
+  backbone: vit_base_patch14_dinov2.lvd142m
+  routing: soft

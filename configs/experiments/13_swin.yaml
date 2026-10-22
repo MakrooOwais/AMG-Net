@@ -1,0 +1,8 @@
+_base_: ../base.yaml
+
+# Swin-T with a single classification head. Same backbone as the proposed model,
+# so the difference between this row and the routed rows isolates routing.
+experiment: swin
+model:
+  name: swin
+  backbone: swin_tiny_patch4_window7_224

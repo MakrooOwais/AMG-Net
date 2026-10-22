@@ -1,0 +1,8 @@
+_base_: ../experiments/40_amg.yaml
+# Seed replicate of the proposed region-free method, for the run-to-run noise floor.
+# cv.seed is untouched so the folds are identical and comparisons stay paired; only
+# runtime.seed changes, which reseeds weight init, sampler order and augmentation.
+# runtime is excluded from the config fingerprint, hence the distinct experiment name.
+experiment: amg_s2024
+runtime:
+  seed: 2024

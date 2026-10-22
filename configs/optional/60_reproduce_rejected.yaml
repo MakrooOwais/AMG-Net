@@ -1,0 +1,26 @@
+_base_: ../base.yaml
+
+# Reproduction of the rejected submission's training setup, for the paper's
+# "what changed" sentence. Everything here is deliberately as-published:
+# hard routing, no LR schedule, 200 epochs, histogram equalisation on.
+#
+# The learning rate is the one thing NOT reproduced: ppgl.config refuses
+# lr >= 1e-2 outright. To actually reproduce 1e-2 you must remove that guard by
+# hand, which is intentional friction - it was likely the single largest defect.
+experiment: reproduce_rejected
+model:
+  name: routed
+  backbone: swin_tiny_patch4_window7_224
+  routing: hard
+data:
+  hist_equalize: true
+  crop_mode: full
+optim:
+  lr: 9.0e-3           # as close to the published 1e-2 as the guard permits
+  llrd: 1.0            # no layer-wise decay
+  scheduler: none
+  warmup_epochs: 0
+  epochs: 200
+  early_stop_patience: 0
+cv:
+  n_repeats: 1         # the original reported a single 10-fold
